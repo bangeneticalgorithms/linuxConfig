@@ -1,12 +1,13 @@
-" Use Vim mode instead of pure Vi,
+ "Use Vim mode instead of pure Vi,
 set nocompatible
 
 " display setting
 scriptencoding utf-8
 set encoding=utf-8  "encoding is used for displaying file
 
+set background=dark
 " colors
-colorscheme Revolution
+colorscheme gruvbox
 
 " general settings
 set mouse=a
@@ -51,9 +52,7 @@ set expandtab
 
 set laststatus=2
 
-execute pathogen#infect()
 syntax on
-filetype plugin indent on
 
 set noswapfile
 
@@ -90,11 +89,11 @@ cmap w!! w !sudo tee % > /dev/null
 
 " Plugins
 
-set rtp+=/.vim/bundle/Vundle.vim
+set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 "Vundle
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
 " Nerd tree 
 Plugin 'scrooloose/nerdtree'
@@ -130,7 +129,7 @@ Plugin 'ivalkeen/nerdtree-execute'
 Plugin 'ddollar/nerdcommenter'
 
 "Taglist
-Plugin 'taglist.vim'
+"Plugin 'taglist.vim'
 
 "Gotham
 Plugin 'whatyouhide/vim-gotham'
@@ -157,4 +156,7 @@ Plugin 'CruizeMissile/Revolution.vim'
 "YCM-Generator
 Plugin 'rdnetto/YCM-Generator'
 
+"Colorscheme gruvbox
+Plugin 'morhetz/gruvbox'
 call vundle#end()
+filetype plugin indent on
