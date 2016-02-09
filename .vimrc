@@ -158,5 +158,15 @@ Plugin 'rdnetto/YCM-Generator'
 
 "Colorscheme gruvbox
 Plugin 'morhetz/gruvbox'
+
+"Colorscheme codeschool
+Plugin 'antlypls/vim-colors-codeschool'
+
+"vim.cpp -additional vim c++ syntax highlighting
+Plugin 'octol/vim-cpp-enhanced-highlight'
+
 call vundle#end()
-filetype plugin indent on
+
+filetype on
+filetype plugin on
+filetype indent on
