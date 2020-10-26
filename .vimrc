@@ -1,13 +1,21 @@
- "Use Vim mode instead of pure Vi,
+" Use Vim mode instead of pure Vi,
 set nocompatible
 
 " display setting
 scriptencoding utf-8
 set encoding=utf-8  "encoding is used for displaying file
 
-set background=dark
 " colors
+if has('termguicolors')
+  set termguicolors
+endif
+
 colorscheme gruvbox
+
+
+" For dark version.
+set background=dark
+
 
 " general settings
 set mouse=a
@@ -25,9 +33,8 @@ nn       <F4> :GitGutterLineHighlightsToggle<CR>
 nn       <F5> :TlistToggle<CR>
 nn       <F6> :setlocal spell! spell?<CR>
 nn       <F7> :setlocal spell! spell?<CR>
-nn       <F8> :NERDTreeToggle<CR>
 
-nnoremap ; :
+
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -37,7 +44,6 @@ nnoremap <tab> :tabn<CR>
 nnoremap <S-tab> :tabp<CR>
 nnoremap <C-t> :tabnew<CR>
 nnoremap <C-n> :NERDTreeToggle<CR>
-
 noremap <C-F> <C-W><C-F>
 
 set splitright
@@ -52,7 +58,9 @@ set expandtab
 
 set laststatus=2
 
+
 syntax on
+filetype plugin indent on
 
 set noswapfile
 
@@ -65,10 +73,15 @@ let NERDTreeShowHidden=1
 let g:ycm_global_ycm_extra_conf = "~/.ycm_extra_conf.py"
 let g:ycm_confirm_extra_conf = 0
 autocmd CompleteDone * pclose
+
 "airline settings
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = '>'
+let g:airline_theme = 'gruvbox_material'
+
+
+
 "vim-gitgutter settings
 let g:gitgutter_max_signs = 2000
 highlight clear SignColumn
@@ -76,97 +89,60 @@ set updatetime=500
 
 "user defined commands
 command! -complete=file -nargs=1 Te tabedit <args>
-command! Cr color Revolution
+command! Cr color gruvbox
 command! Cg color gotham256
 
-"makefile override for tabs / spaces
-if has("autocmd")
-	autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
-endif
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
 
-"allow editing of RO files through root save
-cmap w!! w !sudo tee % > /dev/null
+" Make sure you use single quotes
 
-" Plugins
+" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
+Plug 'junegunn/vim-easy-align'
 
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" Any valid git URL is allowed
+Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 
-"Vundle
-Plugin 'VundleVim/Vundle.vim'
+" Multiple Plug commands can be written in a single line using | separators
+Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 
-" Nerd tree 
-Plugin 'scrooloose/nerdtree'
+" On-demand loading
+Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
-" Vim-fugitive
-Plugin 'tpope/vim-fugitive'
+" Code Completion
+Plug 'ycm-core/YouCompleteMe'
 
-" YoucompleteMe
-Plugin 'Valloric/YouCompleteMe'
+" Using a non-master branch
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 
-" Vim-airline
-Plugin 'bling/vim-airline'
+" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
+Plug 'fatih/vim-go', { 'tag': '*' }
 
-" Syntastic
-Plugin 'scrooloose/syntastic'
+" Plugin options
+Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 
-"Vim-Latex
-Plugin 'jcf/vim-latex'
+"Airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 
-"Vim-nerdtree-tabs
-Plugin 'jistr/vim-nerdtree-tabs'
+" Plugin outside ~/.vim/plugged with post-update hook
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
-"Git gutter
-Plugin 'airblade/vim-gitgutter'
+" Colroschmes
+" Gruvbox
+Plug 'morhetz/gruvbox'
 
-"Tagbar
-Plugin 'majutsushi/tagbar'
-
-"Nerdtree Execute
-Plugin 'ivalkeen/nerdtree-execute'
-
-"Nerd commenter
-Plugin 'ddollar/nerdcommenter'
-
-"Taglist
-"Plugin 'taglist.vim'
-
-"Gotham
-Plugin 'whatyouhide/vim-gotham'
-
-"vim-surround
-Plugin 'anyakichi/vim-surround'
-
-"Endwise
-Plugin 'alpaca-tc/vim-endwise'
-
-"Javascript
-Plugin 'pangloss/vim-javascript'
-
-"Gundo
-Plugin 'sjl/Gundo.vim'
-
-"Python mode
-Plugin 'klen/python-mode'
+" Gruvbox material
+Plug 'sainnhe/gruvbox-material'
+" gotham
+Plug 'whatyouhide/vim-gotham'
 
 
-"Revolution"
-Plugin 'CruizeMissile/Revolution.vim'
+" Unmanaged plugin (manually installed and updated)
+"Plug '~/my-prototype-plugin'
 
-"YCM-Generator
-Plugin 'rdnetto/YCM-Generator'
-
-"Colorscheme gruvbox
-Plugin 'morhetz/gruvbox'
-
-"Colorscheme codeschool
-Plugin 'antlypls/vim-colors-codeschool'
-
-"vim.cpp -additional vim c++ syntax highlighting
-Plugin 'octol/vim-cpp-enhanced-highlight'
-
-call vundle#end()
-
-filetype on
-filetype plugin on
-filetype indent on
+" Initialize plugin system
+call plug#end()
