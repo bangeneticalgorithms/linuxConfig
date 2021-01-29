@@ -1,21 +1,13 @@
-" Use Vim mode instead of pure Vi,
+"Use Vim mode instead of pure Vi,
 set nocompatible
 
 " display setting
 scriptencoding utf-8
 set encoding=utf-8  "encoding is used for displaying file
 
-" colors
-if has('termguicolors')
-  set termguicolors
-endif
-
-colorscheme gruvbox
-
-
-" For dark version.
 set background=dark
-
+" colors
+colorscheme gruvbox
 
 " general settings
 set mouse=a
@@ -27,28 +19,41 @@ set t_Co=256
 set noerrorbells
 
 "fkey bindings
+nnoremap ; :
+
 nnoremap <space> za
-nn       <F3> :GundoToggle<CR>
-nn       <F4> :GitGutterLineHighlightsToggle<CR>
-nn       <F5> :TlistToggle<CR>
-nn       <F6> :setlocal spell! spell?<CR>
-nn       <F7> :setlocal spell! spell?<CR>
-
-
-
-nnoremap <C-J> <C-W><C-J>
-nnoremap <C-K> <C-W><C-K>
-nnoremap <C-L> <C-W><C-L>
-nnoremap <C-H> <C-W><C-H>
+nn <F3> zR
+nn <F4> zM
+nnoremap <S-space> zR
 nnoremap <tab> :tabn<CR>
 nnoremap <S-tab> :tabp<CR>
 nnoremap <C-t> :tabnew<CR>
 nnoremap <C-n> :NERDTreeToggle<CR>
+nmap <F8> :TagbarToggle<CR>
+
+let g:tagbar_type_perl = {
+    \ 'ctagstype' : 'perl',
+    \ 'kinds'     : [
+        \ 'p:package:0:0',
+        \ 'w:roles:0:0',
+        \ 'e:extends:0:0',
+        \ 'u:uses:0:0',
+        \ 'r:requires:0:0',
+        \ 'o:ours:0:0',
+        \ 'a:properties:0:0',
+        \ 'b:aliases:0:0',
+        \ 'h:helpers:0:0',
+        \ 's:subroutines:0:0',
+        \ 'd:POD:1:0'
+    \ ]
+\ }
+
+
 noremap <C-F> <C-W><C-F>
 
 set splitright
 set splitbelow
-
+set lcs+=space:·
 set ignorecase
 
 set smartindent
@@ -58,9 +63,9 @@ set expandtab
 
 set laststatus=2
 
+set backspace=indent,eol,start
 
 syntax on
-filetype plugin indent on
 
 set noswapfile
 
@@ -69,80 +74,131 @@ set fdm=indent
 "nerdtree settings
 let g:NERDTreeWinPos = "right"
 let NERDTreeShowHidden=1
-"ycm settings
-let g:ycm_global_ycm_extra_conf = "~/.ycm_extra_conf.py"
-let g:ycm_confirm_extra_conf = 0
-autocmd CompleteDone * pclose
 
 "airline settings
-let g:airline#extensions#whitespace#enabled = 0
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#left_sep = '>'
-let g:airline_theme = 'gruvbox_material'
-
-
-
-"vim-gitgutter settings
-let g:gitgutter_max_signs = 2000
-highlight clear SignColumn
-set updatetime=500
+"let g:airline#extensions#whitespace#enabled = 0
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#left_sep = '>'
+set updatetime=5000
 
 "user defined commands
 command! -complete=file -nargs=1 Te tabedit <args>
-command! Cr color gruvbox
+command! Cr color Revolution
 command! Cg color gotham256
 
-" Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-" - Avoid using standard Vim directory names like 'plugin'
+"makefile override for tabs / spaces
+if has("autocmd")
+	autocmd FileType make set tabstop=8 shiftwidth=8 softtabstop=0 noexpandtab
+endif
+
+"allow editing of RO files through root save
+cmap w!! w !sudo tee % > /dev/null
+
+" Plugins
+
+"set rtp+=~/.vim/bundle/Vundle.vim
 call plug#begin('~/.vim/plugged')
 
-" Make sure you use single quotes
+"Vundle
+"Plugin 'VundleVim/Vundle.vim'
 
-" Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
-Plug 'junegunn/vim-easy-align'
+" Nerd tree 
+Plug 'preservim/nerdtree'
 
-" Any valid git URL is allowed
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
+"perl-support
+Plug 'wolfgangmehner/perl-support'
 
-" Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+"vim-perl
+Plug 'vim-perl/vim-perl', { 'for': 'perl', 'do': 'make clean carp dancer highlight-all-pragmas moose test-more try-tiny' }
+Plug 'ryuta69/coc-perl', {'do': 'yarn install && yarn build'}
 
-" On-demand loading
-Plug 'preservim/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 
-" Code Completion
-Plug 'ycm-core/YouCompleteMe'
+" Jedi vim
+"Plugin 'davidhalter/jedi-vim'
 
-" Using a non-master branch
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+"SUper tab
+"Plugin 'ervandew/supertab'
 
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
+" Vim-fugitive
+"Plugin 'tpope/vim-fugitive'
 
-" Plugin options
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+" YoucompleteMe
+"Plugin 'Valloric/YouCompleteMe'
 
-"Airline
+" Vim-airline
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 
-" Plugin outside ~/.vim/plugged with post-update hook
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'osfameron/perl-tags-vim'
 
-" Colroschmes
-" Gruvbox
+" Syntastic
+"Plugin 'scrooloose/syntastic'
+
+"Vim-Latex
+"Plugin 'jcf/vim-latex'
+
+"Vim-nerdtree-tabs
+"Plugin 'jistr/vim-nerdtree-tabs'
+
+"Git gutter
+"Plugin 'airblade/vim-gitgutter'
+
+"Tagbar
+Plug 'majutsushi/tagbar'
+
+"Nerdtree Execute
+"Plugin 'ivalkeen/nerdtree-execute'
+
+"Nerd commenter
+"Plugin 'ddollar/nerdcommenter'
+
+"Taglist
+"Plugin 'taglist.vim'
+
+"Gotham
+"Plugin 'whatyouhide/vim-gotham'
+
+"vim-surround
+"Plugin 'anyakichi/vim-surround'
+
+"Endwise
+"Plugin 'alpaca-tc/vim-endwise'
+
+"Javascript
+"Plugin 'pangloss/vim-javascript'
+
+"Gundo
+"Plugin 'sjl/Gundo.vim'
+
+"Python mode
+"Plugin 'klen/python-mode'
+
+
+"Revolution"
+Plug 'CruizeMissile/Revolution.vim'
+
+"YCM-Generator
+"Plugin 'rdnetto/YCM-Generator'
+
+"Indent guides esp for python
+"Plugin 'nathanaelkane/vim-indent-guides'
+
+
+"Colorscheme gruvbox
 Plug 'morhetz/gruvbox'
 
-" Gruvbox material
-Plug 'sainnhe/gruvbox-material'
-" gotham
-Plug 'whatyouhide/vim-gotham'
+"Colorscheme codeschool
+""Plugin 'antlypls/vim-colors-codeschool'
+
+"vim.cpp -additional vim c++ syntax highlighting
+"Plugin 'octol/vim-cpp-enhanced-highlight'
+
+"Coc.vim code completion
+"Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 
-" Unmanaged plugin (manually installed and updated)
-"Plug '~/my-prototype-plugin'
-
-" Initialize plugin system
 call plug#end()
+
+filetype on
+filetype plugin on
+"filetype indent on

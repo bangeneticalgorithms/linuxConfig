@@ -120,10 +120,10 @@ then
     source ~/.aliases
 fi
 
-red=$(tput setaf 1)
-blue=$(tput setaf 4)
+red=$(tput setaf 6)
+blue=$(tput setaf 2)
 reset=$(tput sgr0)
 
 export PS1='\[$red\][\u@\h\[$reset\] \[$blue\]\W\[$reset\]\[$red\]]$\[$reset\] '
 
-
+LS_COLORS=$LS_COLORS:'di=1;96:'
